@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+.venv/
+venv/
+
+# AWS
+*.log
+*.out
+.aws-sam/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Editor/OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Dependencies
+requirements.txt
+requirements-dev.txt
+
+# Deployment packages
+deployment_package.zip
+target/
+
+# Environment variables
+.env
+.env.*
