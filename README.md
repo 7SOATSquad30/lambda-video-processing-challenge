@@ -23,6 +23,7 @@ Esta AWS Lambda tem como objetivo automatizar o processamento de arquivos de ví
 
 ## Fluxograma
 
+```mermaid
 graph TD
     A[Recebe evento do SQS] --> B[Atualiza status no DynamoDB para "Em processamento"]
     B --> C[Baixa arquivo do S3]
@@ -44,6 +45,7 @@ graph TD
     X1 --> Z[Retorna erro 500]
     X2 --> Z[Retorna erro 500]
     X3 --> Z[Retorna erro 500]
+```
 
 ---
 
