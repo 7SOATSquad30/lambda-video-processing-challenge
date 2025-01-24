@@ -30,7 +30,7 @@ graph TD
     C --> D[Extrai frames com FFmpeg]
     D --> E[Cria arquivo ZIP com frames]
     E --> F[Faz upload do ZIP para o S3 de saída]
-    F --> G[Atualiza status no DynamoDB para "Processado"]
+    F --> G[Atualiza status no DynamoDB para Processado]
     G --> H[Retorna resposta de sucesso]
 
     %% Tratamento de erros
