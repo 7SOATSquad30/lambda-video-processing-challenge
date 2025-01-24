@@ -34,7 +34,7 @@ graph TD
     G --> H[Retorna resposta de sucesso]
 
     %% Tratamento de erros
-    A -->|Chave ausente| X1[Erro: Chave ausente no evento]
+    A -->|Chave ausente| X1[Chave ausente no evento]
     A -->|Erro JSON| X2[Erro ao decodificar JSON]
     A -->|Erro inesperado| X3[Erro inesperado]
 
