@@ -1,0 +1,50 @@
+name: Deploy AWS Lambda
+
+on:
+  push:
+    branches:
+      - main  # Defina o branch que acionará o deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Substitua pela sua região AWS
+
+      - name: Instalar dependências necessárias
+        run: sudo apt-get update && sudo apt-get install -y xz-utils zip
+
+      - name: Construir pacote de implantação
+        run: make build
+
+      - name: Fazer upload do pacote para S3 (opcional)
+        run: |
+          aws s3 cp deployment_package.zip s3://seu-bucket-deploy-lambda/
+        if: success()
+
+      - name: Implantar a AWS Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name nome-da-sua-lambda \
+            --zip-file fileb://deployment_package.zip
+        if: success()
+
+      - name: Limpeza pós-deploy
+        run: make clean
+
+      - name: Notificar sucesso do deploy
+        if: success()
+        run: echo "Deploy concluído com sucesso!"
+
+      - name: Notificar falha do deploy
+        if: failure()
+        run: echo "Falha no deploy!"
