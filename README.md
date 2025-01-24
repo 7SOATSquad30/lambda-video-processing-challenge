@@ -25,7 +25,7 @@ Esta AWS Lambda tem como objetivo automatizar o processamento de arquivos de ví
 
 ```mermaid
 graph TD
-    A[Recebe evento do SQS] --> B[Atualiza status no DynamoDB para "Em processamento"]
+    A[Recebe evento do SQS] --> B[Atualiza status no DynamoDB para Em processamento]
     B --> C[Baixa arquivo do S3]
     C --> D[Extrai frames com FFmpeg]
     D --> E[Cria arquivo ZIP com frames]
