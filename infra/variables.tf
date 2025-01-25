@@ -28,8 +28,8 @@ variable "sqs_queue_arn" {
   default     = "arn:aws:sqs:us-east-1:691714441051:sqs-processamento-video"
 }
 
-variable "client_email" {
-  description = "Email do cliente para notificação"
+variable "ses_source_email" {
+  description = "Email de origem para notificação"
   type        = string
   default     = "otavio.sto@gmail.com"
 }

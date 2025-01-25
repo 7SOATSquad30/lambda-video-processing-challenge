@@ -17,11 +17,3 @@ LOG_LEVEL = get_env_variable('LOG_LEVEL', 'INFO')
 # Configuração do logger
 logger = logging.getLogger("LambdaProcessadorVideos")
 logger.setLevel(LOG_LEVEL)
-
-# Configuração do handler e formato de log
-handler = logging.StreamHandler()
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-
-# Adiciona o handler ao logger
-logger.addHandler(handler)

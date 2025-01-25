@@ -7,6 +7,7 @@ def send_email_notification(to_email, error_message):
     ses_client = boto3.client('ses')
     response = ses_client.send_email(
         Source=get_env_variable('SES_SOURCE_EMAIL'),
+        logger.info(f"E-mail do cliente: {to_email}")
         Destination={'ToAddresses': [to_email]},
         Message={
             'Subject': {'Data': 'Erro no processamento Lambda'},

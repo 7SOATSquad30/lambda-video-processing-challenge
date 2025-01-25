@@ -20,13 +20,13 @@ def lambda_handler(event, context):
     try:
         table_name = get_env_variable('DYNAMODB_TABLE_NAME')
         output_bucket_name = get_env_variable('OUTPUT_S3_BUCKET')
-        client_email = get_env_variable('CLIENT_EMAIL')
         processed_files = []
 
         for record in event['Records']:
             message_body = json.loads(record['body'])
             bucket_name = message_body['bucket_name']
             object_key = message_body['object_key']
+            client_email = message_body['client_email']
             download_path = os.path.join('/tmp', os.path.basename(object_key))
             output_frames_dir = os.path.join('/tmp', 'frames')
             zip_file_path = os.path.join('/tmp', 'frames.zip')

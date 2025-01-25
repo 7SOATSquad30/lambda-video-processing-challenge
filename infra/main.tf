@@ -42,7 +42,7 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       DYNAMODB_TABLE_NAME = var.dynamodb_table_name
       OUTPUT_S3_BUCKET    = var.output_s3_bucket
-      CLIENT_EMAIL        = var.client_email
+      SES_SOURCE_EMAIL        = var.ses_source_email
     }
   }
 }
