@@ -1,7 +1,7 @@
 import os
 import subprocess
 import boto3
-from src.config.config import logger
+from app.src.config.config import logger
 
 s3 = boto3.client('s3')
 S3_BUCKET = 'ffmpeg-package-for-lambda'

@@ -1,6 +1,6 @@
 import boto3
-from src.config.config import logger
-from src.config.config import get_env_variable
+from app.src.config.config import logger
+from app.src.config.config import get_env_variable
 
 
 def send_email_notification(to_email, error_message):
