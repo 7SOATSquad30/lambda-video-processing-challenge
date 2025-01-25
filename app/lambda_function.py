@@ -1,14 +1,14 @@
 import json
 import os
 
-from src.service.s3_download_file import download_file_from_s3
-from src.service.dynamodb_update_status import update_status_in_dynamodb
-from src.service.s3_upload_file import upload_file_to_s3
-from src.service.ffmpeg_extract_frames import extract_frames_with_ffmpeg
-from src.service.create_zip_from_folder import create_zip_from_folder
-from src.service.send_email_notification import send_email_notification
-from src.config.config import logger
-from src.config.config import get_env_variable
+from app.src.service.s3_download_file import download_file_from_s3
+from app.src.service.dynamodb_update_status import update_status_in_dynamodb
+from app.src.service.s3_upload_file import upload_file_to_s3
+from app.src.service.ffmpeg_extract_frames import extract_frames_with_ffmpeg
+from app.src.service.create_zip_from_folder import create_zip_from_folder
+from app.src.service.send_email_notification import send_email_notification
+from app.src.config.config import logger
+from app.src.config.config import get_env_variable
 
 def lambda_handler(event, context):
     """
