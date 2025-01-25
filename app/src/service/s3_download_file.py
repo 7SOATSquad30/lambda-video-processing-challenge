@@ -1,5 +1,4 @@
 import boto3
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from src.config.config import logger
 
 def download_file_from_s3(bucket_name: str, object_key: str, download_path: str):
