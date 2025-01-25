@@ -14,7 +14,7 @@ build:
 	cp package/tmp/ffmpeg package/
 	@echo "Compactando pacote de implantação..."
 	cd package && zip -r9 ../$(ZIP_FILE) .
-	zip -g $(ZIP_FILE) lambda_function.py src/**/*
+	zip -g $(ZIP_FILE) app/lambda_function.py app/src/**/*
 	@echo "Pacote de implantação criado: $(ZIP_FILE)"
 
 .PHONY: clean
