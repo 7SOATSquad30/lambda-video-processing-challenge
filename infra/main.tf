@@ -33,7 +33,7 @@ resource "aws_lambda_function" "lambda_function" {
   role             = aws_iam_role.lambda_role.arn
   filename         = "deployment_package.zip"
   source_code_hash = filebase64sha256("deployment_package.zip")
-  handler          = "lambda_function.lambda_handler"
+  handler          = "app.lambda_function.lambda_handler"
   runtime          = "python3.13"
   timeout          = 60
   memory_size      = 512
