@@ -25,7 +25,7 @@ variable "output_s3_bucket" {
 variable "sqs_queue_arn" {
   description = "ARN da fila SQS para acionar a Lambda"
   type        = string
-  default     = "arn:aws:sqs:us-east-1:123456789012:fila_videos"
+  default     = "arn:aws:sqs:us-east-1:691714441051:sqs-processamento-video"
 }
 
 variable "client_email" {
