@@ -35,6 +35,10 @@ jobs:
             exit 1;
           fi
 
+      - name: Fazer upload do pacote para S3 (se necessário)
+        run: |
+          aws s3 cp deployment_package.zip s3://seu-bucket-deploy-lambda/
+
   provision_infra:
     runs-on: ubuntu-latest
     needs: build_and_deploy
@@ -56,7 +60,7 @@ jobs:
           restore-keys: terraform-${{ runner.os }}-
 
       - name: Inicializar Terraform
-        working-directory: infra
+        working-directory: infra  # Certifique-se de que 'infra' está no local correto
         run: terraform init
 
       - name: Planejar Terraform
