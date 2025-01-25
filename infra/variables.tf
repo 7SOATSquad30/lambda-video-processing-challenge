@@ -7,11 +7,13 @@ variable "aws_region" {
 variable "lambda_function_name" {
   description = "Nome da função Lambda"
   type        = string
+  default     = "LambdaProcessadorVideos"
 }
 
 variable "dynamodb_table_name" {
   description = "Nome da tabela DynamoDB"
   type        = string
+  default     = "tabela_videos"
 }
 
 variable "output_s3_bucket" {
@@ -22,9 +24,11 @@ variable "output_s3_bucket" {
 variable "sqs_queue_arn" {
   description = "ARN da fila SQS para acionar a Lambda"
   type        = string
+  default     = "arn:aws:sqs:us-east-1:123456789012:fila_videos"
 }
 
 variable "client_email" {
   description = "Email do cliente para notificação"
   type        = string
+  default     = "otavio.sto@gmail.com"
 }

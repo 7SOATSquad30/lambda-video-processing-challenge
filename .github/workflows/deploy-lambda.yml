@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Substitua pela sua região AWS
+          aws-region: us-east-1
 
       - name: Instalar dependências necessárias
         run: sudo apt-get update && sudo apt-get install -y xz-utils zip
@@ -34,7 +34,7 @@ jobs:
       - name: Implantar a AWS Lambda
         run: |
           aws lambda update-function-code \
-            --function-name nome-da-sua-lambda \
+            --function-name LambdaProcessadorVideos \
             --zip-file fileb://deployment_package.zip
         if: success()
 

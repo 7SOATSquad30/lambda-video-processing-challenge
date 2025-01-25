@@ -26,10 +26,6 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Dependencies
-requirements.txt
-requirements-dev.txt
-
 # Deployment packages
 deployment_package.zip
 target/
