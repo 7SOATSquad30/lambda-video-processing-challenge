@@ -11,13 +11,35 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  provision_infra:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Instalar dependências necessárias
+        run: sudo apt-get update && sudo apt-get install -y xz-utils zip
+
+      - name: Construir pacote de implantação
+        run: |
+          set -e
+          make build
+          if [ ! -f deployment_package.zip ]; then
+            echo "Arquivo deployment_package.zip não encontrado!";
+            exit 1;
+          fi
+
+  provision_infra:
+    runs-on: ubuntu-latest
+    needs: build_and_deploy
+
+    steps:
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -43,36 +65,17 @@ jobs:
 
       - name: Aplicar Terraform
         working-directory: infra
-        run: |
-          test -f tfplan && terraform apply -auto-approve tfplan || { echo "Plano não encontrado"; exit 1; }
+        run: terraform apply -auto-approve tfplan
 
   deploy_lambda:
     runs-on: ubuntu-latest
     needs: provision_infra
 
     steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v4
-
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.AWS_REGION }}
-
-      - name: Instalar dependências necessárias
-        run: sudo apt-get update && sudo apt-get install -y xz-utils zip
-
-      - name: Construir pacote de implantação
-        run: |
-          set -e
-          make build
-
-      - name: Verificar pacote de implantação
-        run: |
-          if [ ! -f deployment_package.zip ]; then
-            echo "Arquivo deployment_package.zip não encontrado!";
-            exit 1;
-          fi
 
       - name: Implantar a AWS Lambda
         run: |
