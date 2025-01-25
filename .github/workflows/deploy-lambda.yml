@@ -67,13 +67,6 @@ jobs:
         working-directory: infra
         run: terraform apply -auto-approve tfplan
 
-      # Implantar a Lambda
-      - name: Implantar a AWS Lambda
-        run: |
-          aws lambda update-function-code \
-            --function-name LambdaProcessadorVideos \
-            --zip-file fileb://deployment_package.zip
-
       # Limpeza pós-deploy
       - name: Limpeza pós-deploy
         run: make clean
