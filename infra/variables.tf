@@ -13,7 +13,7 @@ variable "lambda_function_name" {
 variable "dynamodb_table_name" {
   description = "Nome da tabela DynamoDB"
   type        = string
-  default     = "tabela_videos"
+  default     = "table_videos"
 }
 
 variable "output_s3_bucket" {
