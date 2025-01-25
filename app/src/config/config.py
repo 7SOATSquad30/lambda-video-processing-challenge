@@ -1,5 +1,5 @@
 import os
-from aws_lambda_powertools import Logger
+import logging
 
 def get_env_variable(var_name, default_value=None):
     """
@@ -15,4 +15,13 @@ def get_env_variable(var_name, default_value=None):
 LOG_LEVEL = get_env_variable('LOG_LEVEL', 'INFO')
 
 # Configuração do logger
-logger = Logger(service="s3-file-processor", level=LOG_LEVEL)
+logger = logging.getLogger("LambdaProcessadorVideos")
+logger.setLevel(LOG_LEVEL)
+
+# Configuração do handler e formato de log
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# Adiciona o handler ao logger
+logger.addHandler(handler)
