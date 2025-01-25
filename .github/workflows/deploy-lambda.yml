@@ -36,6 +36,10 @@ jobs:
             exit 1;
           fi
 
+      # Copiar o arquivo de deployment para o diretório onde o Terraform pode acessá-lo
+      - name: Mover arquivo para o diretório do Terraform
+        run: mv deployment_package.zip infra/deployment_package.zip
+
       # Instalar o Terraform
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v2
