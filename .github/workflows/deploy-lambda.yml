@@ -54,6 +54,11 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Instalar dependências necessárias
         run: sudo apt-get update && sudo apt-get install -y xz-utils zip
 
