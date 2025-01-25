@@ -5,8 +5,8 @@ FFMPEG_S3_KEY=ffmpeg/ffmpeg-release-amd64-static.tar.xz
 
 .PHONY: build
 build:
-    @echo "Criando diretórios necessários..."
-    rm -rf package
+	@echo "Criando diretórios necessários..."
+	rm -rf package
     mkdir -p package/tmp
     @echo "Instalando dependências..."
     pip install --target ./package -r app/requirements.txt
