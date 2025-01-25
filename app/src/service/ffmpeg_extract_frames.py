@@ -1,6 +1,20 @@
 import os
 import subprocess
+import boto3
 from src.config.config import logger
+
+s3 = boto3.client('s3')
+S3_BUCKET = 'ffmpeg-package-for-lambda'
+FFMPEG_S3_KEY = 'ffmpeg/ffmpeg-release-amd64-static.tar.xz'
+FFMPEG_LOCAL_PATH = '/tmp/ffmpeg-release-amd64-static.tar.xz'
+FFMPEG_BIN_PATH = '/tmp/ffmpeg'
+
+def download_ffmpeg():
+    logger.info(f"Baixando FFmpeg do S3: s3://{S3_BUCKET}/{FFMPEG_S3_KEY}")
+    s3.download_file(S3_BUCKET, FFMPEG_S3_KEY, FFMPEG_LOCAL_PATH)
+    logger.info("Extraindo FFmpeg...")
+    subprocess.run(['tar', '-xJf', FFMPEG_LOCAL_PATH, '-C', '/tmp', '--strip-components', '1'], check=True)
+    logger.info("FFmpeg extraído com sucesso.")
 
 def extract_frames_with_ffmpeg(video_path, output_dir):
     """
@@ -13,10 +27,8 @@ def extract_frames_with_ffmpeg(video_path, output_dir):
     """
     os.makedirs(output_dir, exist_ok=True)
 
-    ffmpeg_path = '/tmp/ffmpeg'  # Caminho esperado para o binário do FFmpeg
-    if not os.path.isfile(ffmpeg_path):
-        logger.error(f"FFmpeg não encontrado em {ffmpeg_path}. Verifique o download e o caminho.")
-        raise FileNotFoundError(f"FFmpeg não encontrado no caminho {ffmpeg_path}")
+    if not os.path.isfile(FFMPEG_BIN_PATH):
+        download_ffmpeg()
 
     if not os.path.isfile(video_path):
         logger.error(f"O arquivo de vídeo não foi encontrado: {video_path}")
@@ -25,7 +37,7 @@ def extract_frames_with_ffmpeg(video_path, output_dir):
     output_frame_pattern = os.path.join(output_dir, 'frame_%04d.jpg')
 
     command = [
-        ffmpeg_path,      # Caminho do executável FFmpeg
+        FFMPEG_BIN_PATH,  # Caminho do executável FFmpeg
         '-i', video_path, # Caminho do vídeo de entrada
         '-vf', 'fps=1',   # Extrair 1 frame por segundo
         output_frame_pattern  # Padrão para salvar os frames
