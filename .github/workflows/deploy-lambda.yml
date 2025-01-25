@@ -24,7 +24,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y xz-utils zip
 
       - name: Construir pacote de implantação
-        run: cd app && make build
+        working-directory: app
+        run: make build
 
       - name: Fazer upload do pacote para S3 (opcional)
         run: |
