@@ -26,11 +26,6 @@ jobs:
       - name: Construir pacote de implantação
         run: make build
 
-      - name: Fazer upload do pacote para S3 (opcional)
-        run: |
-          aws s3 cp deployment_package.zip s3://seu-bucket-deploy-lambda/
-        if: success()
-
       - name: Implantar a AWS Lambda
         run: |
           aws lambda update-function-code \
