@@ -11,7 +11,7 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,7 @@ jobs:
       - name: Instalar dependências necessárias
         run: sudo apt-get update && sudo apt-get install -y xz-utils zip
 
+      # Criação do pacote de deployment
       - name: Construir pacote de implantação
         run: |
           set -e
@@ -35,19 +36,11 @@ jobs:
             exit 1;
           fi
 
-  provision_infra:
-    runs-on: ubuntu-latest
-    needs: build_and_deploy
-
-    steps:
-      - name: Configurar credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-
+      # Instalar o Terraform
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v2
 
+      # Cache do Terraform (melhora a performance)
       - name: Cache do Terraform
         uses: actions/cache@v3
         with:
@@ -55,41 +48,38 @@ jobs:
           key: terraform-${{ runner.os }}-${{ hashFiles('infra/**/*.tf') }}
           restore-keys: terraform-${{ runner.os }}-
 
+      # Inicializar Terraform
       - name: Inicializar Terraform
-        working-directory: infra
+        working-directory: infra  # Certifique-se de que 'infra' está no local correto
         run: terraform init
 
+      # Planejar o Terraform
       - name: Planejar Terraform
         working-directory: infra
         run: terraform plan -out=tfplan
 
+      # Aplicar Terraform
       - name: Aplicar Terraform
         working-directory: infra
         run: terraform apply -auto-approve tfplan
 
-  deploy_lambda:
-    runs-on: ubuntu-latest
-    needs: provision_infra
-
-    steps:
-      - name: Configurar credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-
+      # Implantar a Lambda
       - name: Implantar a AWS Lambda
         run: |
           aws lambda update-function-code \
             --function-name LambdaProcessadorVideos \
             --zip-file fileb://deployment_package.zip
 
+      # Limpeza pós-deploy
       - name: Limpeza pós-deploy
         run: make clean
 
+      # Notificar sucesso do deploy
       - name: Notificar sucesso do deploy
         if: success()
         run: echo "Deploy concluído com sucesso para LambdaProcessadorVideos em $AWS_REGION!"
 
+      # Notificar falha do deploy
       - name: Notificar falha do deploy
         if: failure()
         run: echo "Falha no deploy da LambdaProcessadorVideos. Verifique os logs."
