@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: us-east-1
+
 jobs:
   provision_infra:
     runs-on: ubuntu-latest
@@ -16,12 +21,17 @@ jobs:
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v2
+
+      - name: Cache do Terraform
+        uses: actions/cache@v3
+        with:
+          path: ~/.terraform.d
+          key: terraform-${{ runner.os }}-${{ hashFiles('infra/**/*.tf') }}
+          restore-keys: terraform-${{ runner.os }}-
 
       - name: Inicializar Terraform
         working-directory: infra
@@ -33,7 +43,8 @@ jobs:
 
       - name: Aplicar Terraform
         working-directory: infra
-        run: terraform apply -auto-approve tfplan
+        run: |
+          test -f tfplan && terraform apply -auto-approve tfplan || { echo "Plano não encontrado"; exit 1; }
 
   deploy_lambda:
     runs-on: ubuntu-latest
@@ -43,18 +54,20 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: Configurar credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
       - name: Instalar dependências necessárias
         run: sudo apt-get update && sudo apt-get install -y xz-utils zip
 
       - name: Construir pacote de implantação
-        run: make build
+        run: |
+          set -e
+          make build
+
+      - name: Verificar pacote de implantação
+        run: |
+          if [ ! -f deployment_package.zip ]; then
+            echo "Arquivo deployment_package.zip não encontrado!";
+            exit 1;
+          fi
 
       - name: Implantar a AWS Lambda
         run: |
@@ -67,8 +80,8 @@ jobs:
 
       - name: Notificar sucesso do deploy
         if: success()
-        run: echo "Deploy concluído com sucesso!"
+        run: echo "Deploy concluído com sucesso para LambdaProcessadorVideos em $AWS_REGION!"
 
       - name: Notificar falha do deploy
         if: failure()
-        run: echo "Falha no deploy!"
+        run: echo "Falha no deploy da LambdaProcessadorVideos. Verifique os logs."
