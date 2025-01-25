@@ -8,7 +8,7 @@ build:
 	rm -rf package
 	mkdir -p package/tmp
 	@echo "Instalando dependências..."
-	pip install --target ./package -r requirements.txt
+	pip install --target ./package -r app/requirements.txt
 	@echo "Baixando FFmpeg..."
 	curl -L $(FFMPEG_URL) | tar -xJ -C package/tmp --strip-components 1
 	cp package/tmp/ffmpeg package/
