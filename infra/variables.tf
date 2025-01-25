@@ -19,6 +19,7 @@ variable "dynamodb_table_name" {
 variable "output_s3_bucket" {
   description = "Nome do bucket S3 para saída"
   type        = string
+  default     = "teste-arquivos-videos "
 }
 
 variable "sqs_queue_arn" {

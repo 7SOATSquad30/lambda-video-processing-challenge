@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+    bucket         = "fiap-challenge-terraform-state "
+    key            = "lambda-video-processing-challenge/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+  }
+}
+
 provider "aws" {
   region = var.aws_region
 }
