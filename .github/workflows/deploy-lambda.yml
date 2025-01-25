@@ -56,7 +56,7 @@ jobs:
           restore-keys: terraform-${{ runner.os }}-
 
       - name: Inicializar Terraform
-        working-directory: infra  # Certifique-se de que 'infra' está no local correto
+        working-directory: infra
         run: terraform init
 
       - name: Planejar Terraform
