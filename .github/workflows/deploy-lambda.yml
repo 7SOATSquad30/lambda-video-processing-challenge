@@ -25,7 +25,7 @@ jobs:
 
       - name: Construir pacote de implantação
         working-directory: app
-        run: make build
+        run: make -f Makefile build
 
       - name: Fazer upload do pacote para S3 (opcional)
         run: |
