@@ -10,7 +10,6 @@ FFMPEG_S3_KEY = 'ffmpeg/ffmpeg-release-amd64-static.tar.xz'
 FFMPEG_LOCAL_PATH = '/tmp/ffmpeg-release-amd64-static.tar.xz'
 FFMPEG_BIN_PATH = '/tmp/ffmpeg'
 
-import tarfile
 
 def extract_ffmpeg():
     logger.info("Extraindo FFmpeg usando tarfile...")
@@ -31,7 +30,7 @@ def extract_frames_with_ffmpeg(video_path, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     if not os.path.isfile(FFMPEG_BIN_PATH):
-        download_ffmpeg()
+        extract_ffmpeg()
 
     if not os.path.isfile(video_path):
         logger.error(f"O arquivo de vídeo não foi encontrado: {video_path}")
