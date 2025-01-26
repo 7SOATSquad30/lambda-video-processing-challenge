@@ -1,7 +1,10 @@
 ZIP_FILE=deployment_package.zip
 FFMPEG_URL=https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
 S3_BUCKET=ffmpeg-package-for-lambda
-FFMPEG_S3_KEY=ffmpeg/ffmpeg-release-amd64-static.tar.xz
+FFMPEG_S3_KEY=ffmpeg/ffmpeg-release-amd64-static.zip
+
+LAYER_ZIP=ffmpeg-layer.zip
+LAYER_DIR=ffmpeg-layer
 
 .PHONY: build
 build:
@@ -15,16 +18,21 @@ build:
 	zip -g $(ZIP_FILE) app/lambda_function.py app/src/**/*
 	@echo "Pacote de implantação criado: $(ZIP_FILE)"
 
-.PHONY: upload-ffmpeg
-upload-ffmpeg:
+.PHONY: build-ffmpeg-layer
+build-ffmpeg-layer:
 	@echo "Baixando FFmpeg..."
 	curl -L $(FFMPEG_URL) -o ffmpeg-release-amd64-static.tar.xz
-	@echo "Enviando FFmpeg para o S3..."
-	aws s3 cp ffmpeg-release-amd64-static.tar.xz s3://$(S3_BUCKET)/$(FFMPEG_S3_KEY)
-	@echo "FFmpeg enviado para o S3: s3://$(S3_BUCKET)/$(FFMPEG_S3_KEY)"
+	@echo "Extraindo FFmpeg..."
+	mkdir -p $(LAYER_DIR)/bin
+	tar -xJf ffmpeg-release-amd64-static.tar.xz --strip-components=1 -C $(LAYER_DIR)/bin
+	@echo "Compactando camada FFmpeg..."
+	cd $(LAYER_DIR) && zip -r9 ../$(LAYER_ZIP) .
+	@echo "Enviando camada FFmpeg para o S3..."
+	aws s3 cp $(LAYER_ZIP) s3://$(S3_BUCKET)/$(FFMPEG_S3_KEY)
+	@echo "FFmpeg Layer enviada para o S3: s3://$(S3_BUCKET)/$(FFMPEG_S3_KEY)"
 
 .PHONY: clean
 clean:
 	@echo "Limpando arquivos temporários..."
-	rm -rf package $(ZIP_FILE) ffmpeg-release-amd64-static.tar.xz
+	rm -rf package $(ZIP_FILE) $(LAYER_DIR) $(LAYER_ZIP) ffmpeg-release-amd64-static.tar.xz
 	@echo "Limpeza concluída."

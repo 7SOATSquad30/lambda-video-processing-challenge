@@ -37,7 +37,9 @@ resource "aws_lambda_function" "lambda_function" {
   runtime          = "python3.13"
   timeout          = 60
   memory_size      = 512
-
+  layers = [
+    aws_lambda_layer_version.ffmpeg_layer.arn
+  ]
   ephemeral_storage {
     size = 10240
   }
@@ -52,6 +54,17 @@ resource "aws_lambda_function" "lambda_function" {
       DOWNLOAD_PATH_FFMPEG = var.download_path_ffmpeg
     }
   }
+}
+
+resource "aws_lambda_layer_version" "ffmpeg_layer" {
+  layer_name          = "ffmpeg-layer"
+  description         = "FFmpeg static binary layer"
+  compatible_runtimes = ["python3.9", "python3.10", "python3.11", "python3.12", "python3.13"]
+
+  s3_bucket = var.bucket_name_ffmpeg
+  s3_key    = var.object_key_ffmpeg
+
+  retain_old_version = true
 }
 
 resource "aws_lambda_event_source_mapping" "sqs_event_source" {

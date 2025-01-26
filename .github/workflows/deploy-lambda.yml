@@ -38,7 +38,7 @@ jobs:
 
       # Baixar e enviar ffmpeg para o bucket S3
       - name: Baixar e enviar FFmpeg para o S3
-        run: make upload-ffmpeg
+        run: make build-ffmpeg-layer
 
       # Copiar o arquivo de deployment para o diretório onde o Terraform pode acessá-lo
       - name: Mover arquivo para o diretório do Terraform

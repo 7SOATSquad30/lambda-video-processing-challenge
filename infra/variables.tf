@@ -41,9 +41,9 @@ variable "bucket_name_ffmpeg" {
 }
 
 variable "object_key_ffmpeg" {
-  description = "Chave do objeto FFmpeg dentro do bucket S3"
+  description = "Caminho do arquivo FFmpeg no S3"
   type        = string
-  default     = "ffmpeg/ffmpeg-release-amd64-static.tar.xz"
+  default     = "ffmpeg/ffmpeg-release-amd64-static.zip"
 }
 
 variable "download_path_ffmpeg" {
