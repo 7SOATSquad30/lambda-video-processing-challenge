@@ -12,10 +12,20 @@ FFMPEG_BIN_PATH = '/tmp/ffmpeg'
 
 
 def extract_ffmpeg():
+    if not os.path.exists(FFMPEG_LOCAL_PATH):
+        raise FileNotFoundError(f"O arquivo {FFMPEG_LOCAL_PATH} não foi encontrado.")
+
+    file_size = os.path.getsize(FFMPEG_LOCAL_PATH)
+    logger.info(f"Tamanho do arquivo baixado: {file_size} bytes")
+
+    if file_size < 100000:  # Exemplo de tamanho mínimo esperado (ajuste conforme necessário)
+        raise ValueError("Arquivo baixado está incompleto ou corrompido.")
+
     logger.info("Extraindo FFmpeg usando tarfile...")
     with tarfile.open(FFMPEG_LOCAL_PATH, 'r:xz') as tar:
         tar.extractall(path='/tmp')
     logger.info("FFmpeg extraído com sucesso.")
+
 
 
 def extract_frames_with_ffmpeg(video_path, output_dir):
