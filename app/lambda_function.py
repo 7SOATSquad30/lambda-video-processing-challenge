@@ -37,7 +37,6 @@ def lambda_handler(event, context):
 
             logger.info(f"Iniciando download do arquivo: {object_key} do bucket: {bucket_name}")
             download_file_from_s3(bucket_name, object_key, download_path)
-            logger.info(f"Arquivo baixado com sucesso em: {download_path}")
 
             # Extrai frames do vídeo usando FFmpeg
             extract_frames_with_ffmpeg(download_path, output_frames_dir)
