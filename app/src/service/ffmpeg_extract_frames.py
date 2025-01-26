@@ -1,5 +1,6 @@
 import os
 import subprocess
+import tarfile
 import boto3
 from app.src.config.config import logger
 
@@ -9,12 +10,14 @@ FFMPEG_S3_KEY = 'ffmpeg/ffmpeg-release-amd64-static.tar.xz'
 FFMPEG_LOCAL_PATH = '/tmp/ffmpeg-release-amd64-static.tar.xz'
 FFMPEG_BIN_PATH = '/tmp/ffmpeg'
 
-def download_ffmpeg():
-    logger.info(f"Baixando FFmpeg do S3: s3://{S3_BUCKET}/{FFMPEG_S3_KEY}")
-    s3.download_file(S3_BUCKET, FFMPEG_S3_KEY, FFMPEG_LOCAL_PATH)
-    logger.info("Extraindo FFmpeg...")
-    subprocess.run(['tar', '-xJf', FFMPEG_LOCAL_PATH, '-C', '/tmp', '--strip-components', '1'], check=True)
+import tarfile
+
+def extract_ffmpeg():
+    logger.info("Extraindo FFmpeg usando tarfile...")
+    with tarfile.open(FFMPEG_LOCAL_PATH, 'r:xz') as tar:
+        tar.extractall(path='/tmp')
     logger.info("FFmpeg extraído com sucesso.")
+
 
 def extract_frames_with_ffmpeg(video_path, output_dir):
     """
