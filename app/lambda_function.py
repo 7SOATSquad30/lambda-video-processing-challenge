@@ -20,7 +20,11 @@ def lambda_handler(event, context):
     try:
         table_name = get_env_variable('DYNAMODB_TABLE_NAME')
         output_bucket_name = get_env_variable('OUTPUT_S3_BUCKET')
+        bucket_name_ffmpeg = get_env_variable('BUCKET_NAME_FFMPEG')
+        object_key_ffmpeg = get_env_variable('OBJECT_KEY_FFMPEG')
+        download_path_ffmpeg = get_env_variable('DOWNLOAD_PATH_FFMPEG')
         processed_files = []
+
 
         for record in event['Records']:
             message_body = json.loads(record['body'])
@@ -37,6 +41,10 @@ def lambda_handler(event, context):
             logger.info(f"Iniciando download do arquivo: {object_key} do bucket: {bucket_name}")
             download_file_from_s3(bucket_name, object_key, download_path)
             logger.info(f"Arquivo baixado com sucesso em: {download_path}")
+
+            logger.info(f"Iniciando download do arquivo: {object_key_ffmpeg} do bucket: {bucket_name_ffmpeg}")
+            download_file_from_s3(bucket_name, object_key, download_path_ffmpeg)
+            logger.info(f"Arquivo baixado com sucesso em: {download_path_ffmpeg}")
 
             # Extrai frames do vídeo usando FFmpeg
             extract_frames_with_ffmpeg(download_path, output_frames_dir)

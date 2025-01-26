@@ -40,9 +40,12 @@ resource "aws_lambda_function" "lambda_function" {
 
   environment {
     variables = {
-      DYNAMODB_TABLE_NAME = var.dynamodb_table_name
-      OUTPUT_S3_BUCKET    = var.output_s3_bucket
-      SES_SOURCE_EMAIL        = var.ses_source_email
+      DYNAMODB_TABLE_NAME  = var.dynamodb_table_name
+      OUTPUT_S3_BUCKET     = var.output_s3_bucket
+      SES_SOURCE_EMAIL     = var.ses_source_email
+      BUCKET_NAME_FFMPEG   = var.bucket_name_ffmpeg
+      OBJECT_KEY_FFMPEG    = var.object_key_ffmpeg
+      DOWNLOAD_PATH_FFMPEG = var.download_path_ffmpeg
     }
   }
 }

@@ -33,3 +33,21 @@ variable "ses_source_email" {
   type        = string
   default     = "otavio.sto@gmail.com"
 }
+
+variable "bucket_name_ffmpeg" {
+  description = "Nome do bucket S3 onde o FFmpeg está armazenado"
+  type        = string
+  default     = "ffmpeg-package-for-lambda"
+}
+
+variable "object_key_ffmpeg" {
+  description = "Chave do objeto FFmpeg dentro do bucket S3"
+  type        = string
+  default     = "ffmpeg/ffmpeg-release-amd64-static.tar.xz"
+}
+
+variable "download_path_ffmpeg" {
+  description = "Caminho local para download do arquivo FFmpeg"
+  type        = string
+  default     = "/tmp/ffmpeg-release-amd64-static.tar.xz"
+}
