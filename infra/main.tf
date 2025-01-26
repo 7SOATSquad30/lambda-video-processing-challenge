@@ -63,8 +63,6 @@ resource "aws_lambda_layer_version" "ffmpeg_layer" {
 
   s3_bucket = var.bucket_name_ffmpeg
   s3_key    = var.object_key_ffmpeg
-
-  retain_old_version = true
 }
 
 resource "aws_lambda_event_source_mapping" "sqs_event_source" {
