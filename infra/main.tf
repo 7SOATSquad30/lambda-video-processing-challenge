@@ -35,7 +35,7 @@ resource "aws_lambda_function" "lambda_function" {
   source_code_hash = filebase64sha256("deployment_package.zip")
   handler          = "app.lambda_function.lambda_handler"
   runtime          = "python3.13"
-  timeout          = 60
+  timeout          = 900
   memory_size      = 512
   layers = [
     aws_lambda_layer_version.ffmpeg_layer.arn
