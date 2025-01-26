@@ -38,6 +38,10 @@ resource "aws_lambda_function" "lambda_function" {
   timeout          = 60
   memory_size      = 512
 
+  ephemeral_storage {
+    size = 10240
+  }
+
   environment {
     variables = {
       DYNAMODB_TABLE_NAME  = var.dynamodb_table_name
